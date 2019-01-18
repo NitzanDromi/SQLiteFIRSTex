@@ -21,9 +21,8 @@ public class secondActivity extends AppCompatActivity implements AdapterView.OnI
     ListView lv;
     ArrayAdapter adp;
     Spinner spinner;
-
-    ArrayList<String> nm=new ArrayList<>();
-    ArrayList<String> ag=new ArrayList<>();
+    String [] whichTable = {"name", "age"};
+    ArrayList<String> data=new ArrayList<>();
     SQLiteDatabase db;
     HelperDB hlp;
 
@@ -33,6 +32,13 @@ public class secondActivity extends AppCompatActivity implements AdapterView.OnI
         setContentView(R.layout.activity_second);
         hlp=new HelperDB(this);
         db=hlp.getWritableDatabase();
+        spinner = findViewById(R.id.spin);
+        ArrayAdapter<String> adp = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item, whichTable);
+        spinner.setAdapter(adp);
+        spinner.setOnItemSelectedListener(this);
+        lv= (ListView)findViewById(R.id.listvew);
+        hlp= new HelperDB(this);
+
     }
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
@@ -51,44 +57,62 @@ public class secondActivity extends AppCompatActivity implements AdapterView.OnI
         return super.onOptionsItemSelected(item);
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        Cursor c= db.query(Name.TABLE_NAME,null,null,null,null,null,null);
-        int col1id=c.getColumnIndex("_id");
-        int colname=c.getColumnIndex("Name");
-        int colstid=c.getColumnIndex("st_id");
-        c.moveToFirst();
-        while (!c.isAfterLast()){
-            String name=c.getString(colname);
-            String student=c.getString(colstid);
-            String temp=name+","+student;
-            nm.add(temp);
-            c.moveToNext();
-        }
-        c.close();
-        adp=new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1,nm);
-        lv.setAdapter(adp);
-    }
+
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        Cursor c= db.query(Age.TABLE_AGE,null,null,null,null,null,null);
-        int col2id=c.getColumnIndex("_id");
-        int colclass=c.getColumnIndex("Class");
-        int colshih=c.getColumnIndex("Shihva");
-        int coltype=c.getColumnIndex("Type");
-        c.moveToFirst();
-        while (!c.isAfterLast()){
-            String  clas=c.getString(colclass);
-            int shih=c.getInt(colshih);
-            String type=c.getString(coltype);
-            String temp=type+","+shih+","+clas;
-            ag.add(temp);
-            c.moveToNext();
-        }
-        c.close();
-        adp=new ArrayAdapter(this,android.R.layout.simple_expandable_list_item_1,ag);
-        lv.setAdapter(adp);
-
     }
+
+    public void showData(int position) {
+        db = hlp.getWritableDatabase();
+            data.clear();
+            Cursor c;
+            if (position == 0) {
+                c= db.query(Name.TABLE_NAME,null,null,null,null,null,null);
+                int[] col = new int[3];
+                col[0] = c.getColumnIndex("_id");
+                col[1] = c.getColumnIndex("Name");
+                col[2] = c.getColumnIndex("st_id");
+                c.moveToFirst();
+
+            while (!c.isAfterLast()) {
+                String name = c.getString(col[1]);
+                String st_id = c.getString(col[2]);
+                String tmp = name + ", " + st_id;
+                data.add(tmp);
+                c.moveToNext();
+                adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+                lv.setAdapter(adp);
+            }
+        }
+        else
+        {
+            c = db.query(Age.TABLE_AGE, null, null, null, null, null, null);
+            int[] col2 = new int[4];
+            col2[0] = c.getColumnIndex("_idAge");
+            col2[1] = c.getColumnIndex("Class");
+            col2[2] = c.getColumnIndex("Shihva");
+            col2[3] = c.getColumnIndex("Type");
+            c.moveToFirst();
+
+            while (!c.isAfterLast()) {
+                String clas = c.getString(col2[1]);
+                String shih = c.getString(col2[2]);
+                String sug = c.getString(col2[3]);
+
+                String tmp = shih + ", " + clas + ", " + sug;
+                data.add(tmp);
+                c.moveToNext();
+                adp = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, data);
+                lv.setAdapter(adp);
+            }
+        }
+             c.close();
+
+        }
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
+        showData(position);
+    }
+
 }
