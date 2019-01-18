@@ -15,7 +15,6 @@ public class MainActivity extends AppCompatActivity  {
     SQLiteDatabase db;
     HelperDB hlp;
     EditText t1et1, t1et2, t2et1, t2et2, t2et3;
-    String strID, strNAME, strCLASS, strTYPE, strSHIHVA;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,8 +50,7 @@ public class MainActivity extends AppCompatActivity  {
     public void nameid(View view) {
         hlp = new HelperDB(this);
         db=hlp.getWritableDatabase();
-        //strID=t1et2.getText().toString();
-        //strNAME=t1et1.getText().toString();
+
         ContentValues  cv=new ContentValues();
         cv.put(Name.NAME,t1et1.getText().toString());
         cv.put(Name.ST_ID,t1et2.getText().toString());
@@ -64,9 +62,7 @@ public class MainActivity extends AppCompatActivity  {
     public void classInfo(View view) {
         hlp = new HelperDB(this);
         db=hlp.getWritableDatabase();
-        //strCLASS=t2et2.getText().toString();
-        //strSHIHVA=t2et1.getText().toString();
-       // strTYPE=t2et3.getText().toString();
+
         ContentValues  cv=new ContentValues();
         cv.put(Age.CLASS,t2et2.getText().toString());
         cv.put(Age.SHIHVA,t2et1.getText().toString());
