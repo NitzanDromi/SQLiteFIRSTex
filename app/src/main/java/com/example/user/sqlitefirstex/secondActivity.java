@@ -61,9 +61,10 @@ public class secondActivity extends AppCompatActivity implements AdapterView.OnI
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-    }
 
-    public void showData(int position) {
+    }
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
         db = hlp.getWritableDatabase();
             data.clear();
             Cursor c;
@@ -110,9 +111,6 @@ public class secondActivity extends AppCompatActivity implements AdapterView.OnI
              c.close();
 
         }
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
-        showData(position);
-    }
+
 
 }
